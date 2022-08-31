@@ -1,0 +1,4 @@
+galaxy_info:
+  role_name: monitoring_agents
+  description: Install and manage monitoring agents
+  company: Merixstudio

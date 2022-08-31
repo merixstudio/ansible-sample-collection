@@ -1,0 +1,68 @@
+global:
+  scrape_interval: 30s
+  scrape_timeout: 10s
+
+scrape_configs:
+
+{% if "prometheus" in monitoring_agents %}
+  - job_name: prometheus
+    basic_auth:
+      username: "{{ prometheus_username }}"
+      password: "{{ prometheus_password }}"
+    static_configs:
+      - targets: ["127.0.0.1:XXXX"]
+        labels:
+          federate: "true"
+          project: "{{ project_name }}"
+          environment: "{{ environment_name }}"
+{% endif %}
+
+{% if "node-exporter" in monitoring_agents %}
+  - job_name: node-exporter
+    static_configs:
+      - targets: ["node-exporter:XXXX"]
+        labels:
+          federate: "true"
+          project: "{{ project_name }}"
+          environment: "{{ environment_name }}"
+{% endif %}
+
+{% if "nginx-exporter" in monitoring_agents %}
+  - job_name: nginx-exporter
+    static_configs:
+      - targets: ["nginx-exporter:XXXX"]
+        labels:
+          federate: "true"
+          project: "{{ project_name }}"
+          environment: "{{ environment_name }}"
+{% endif %}
+
+{% if "cadvisor" in monitoring_agents %}
+  - job_name: cadvisor
+    static_configs:
+      - targets: ["cadvisor:XXXX"]
+        labels:
+          federate: "true"
+          project: "{{ project_name }}"
+          environment: "{{ environment_name }}"
+{% endif %}
+
+{% if "docker-exporter" in monitoring_agents %}
+  - job_name: docker-exporter
+    static_configs:
+      - targets: ["docker-exporter:XXXX"]
+        labels:
+          federate: "true"
+          project: "{{ project_name }}"
+          environment: "{{ environment_name }}"
+{% endif %}
+
+{% if "sentry-exporter" in monitoring_agents %}
+  - job_name: sentry-exporter
+    static_configs:
+      - targets: ["sentry-exporter:XXXX"]
+        labels:
+          federate: "true"
+          project: "{{ project_name }}"
+          environment: "{{ environment_name }}"
+{% endif %}

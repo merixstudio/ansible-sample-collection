@@ -1,0 +1,61 @@
+---
+- name: Install docker python library
+  ansible.builtin.pip:
+    name:
+      - docker
+      - docker-compose
+
+- name: Create project dir
+  ansible.builtin.file:
+    path: "{{ monitoring_agents_dir }}"
+    state: directory
+    owner: root
+    group: root
+    force: yes
+
+- name: Fill docker-compose.yml file
+  ansible.builtin.template:
+    src: ./templates/docker-compose.yml.j2
+    dest: "{{ monitoring_agents_dir }}/docker-compose.yml"
+    owner: root
+    group: root
+    force: yes
+  notify: agents restart
+
+- name: Fill secrets in promtail.yml file
+  ansible.builtin.template:
+    src: ./templates/promtail.yml.j2
+    dest: "{{ monitoring_agents_dir }}/promtail.yml"
+    owner: root
+    group: root
+    force: yes
+  when: "'promtail' in monitoring_agents"
+  notify: agents restart
+
+- name: Create prometheus data directory
+  when: "'prometheus' in monitoring_agents"
+  ansible.builtin.file:
+    path: /etc/prometheus/data
+    state: directory
+    mode: 0700
+
+- name: Create prometheus config
+  when: "'prometheus' in monitoring_agents"
+  notify: agents restart
+  ansible.builtin.template:
+    src: ./templates/prometheus.yml.j2
+    dest: "{{ monitoring_agents_dir }}/prometheus.yml"
+    force: yes
+
+- name: Create prometheus web config
+  when: "'prometheus' in monitoring_agents"
+  notify: agents restart
+  ansible.builtin.template:
+    src: ./templates/prometheus-web.yml.j2
+    dest: "{{ monitoring_agents_dir }}/prometheus-web.yml"
+    force: yes
+
+- name: Create and start compose services
+  community.docker.docker_compose:
+    project_src: "{{ monitoring_agents_dir }}"
+  register: output

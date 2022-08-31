@@ -1,0 +1,5 @@
+monitoring_agents: ["prometheus"]
+monitoring_agents_dir: /srv/agents
+promtail_scrape_jobs: ["cron", "journal", "docker"]
+filter_ufw_block_logs: false
+prometheus_retention: 14d

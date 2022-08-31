@@ -1,0 +1,3 @@
+---
+- name: confirm docker restart
+  include_tasks: ./tasks/docker-restart.yml

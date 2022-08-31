@@ -1,0 +1,13 @@
+{
+{% if use_docker_init %}
+  "init": true,
+{% endif %}
+{% raw %}
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "3",
+    "tag": "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  }
+{% endraw %}
+}

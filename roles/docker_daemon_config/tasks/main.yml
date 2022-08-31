@@ -1,0 +1,10 @@
+---
+- name: Set docker daemon.json config
+  ansible.builtin.template:
+    src: ./templates/daemon.json.j2
+    dest: "/etc/docker/daemon.json"
+    owner: root
+    group: root
+    mode: 0640
+    force: yes
+  notify: confirm docker restart

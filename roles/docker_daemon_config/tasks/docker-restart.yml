@@ -1,0 +1,9 @@
+---
+- name: Confirm docker restart
+  pause:
+    prompt: "Do you want to restart docker daemon (yes/no)?"
+  register: docker_restart_confirmation
+
+- name: Restart docker daemon
+  ansible.builtin.service: name=docker state=restarted
+  when: docker_restart_confirmation.user_input | bool
